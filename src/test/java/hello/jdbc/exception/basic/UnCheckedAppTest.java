@@ -22,6 +22,18 @@ public class UnCheckedAppTest {
                 .isInstanceOf(Exception.class);
     }
 
+    //예외를 전환할 때는 꼭 기존 예외를 포함하자
+    @Test
+    void printEx() {
+        Controller controller = new Controller();
+        try {
+            controller.request();
+        } catch (Exception e) {
+            // e.printStackTreace(); 추천X, 로그 방식 사용하자
+            log.info("ex", e);
+        }
+    }
+
     //예외 처리 못해서 밖으로 던짐
     static class Controller{
         Service service = new Service();
@@ -47,7 +59,7 @@ public class UnCheckedAppTest {
             try {
                 runSQL();
             } catch (SQLException e) { //checkException -> unCheckException 전환
-                throw new RuntimeSQLException(e);
+                throw new RuntimeSQLException(e); //기존 예외 포함
             }
         }
 
